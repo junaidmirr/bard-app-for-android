@@ -26,3 +26,5 @@ Disclaimer:
 This repository and APK are for informational and experimental purposes only. Google AI is not responsible for any consequences arising from their use.
 
 Explore the possibilities of AI-powered communication and productivity today. Download Bard and unlock a new dimension of mobile interaction.
+
+Please give me stars if you like my work!!🐱
