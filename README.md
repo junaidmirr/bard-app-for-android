@@ -27,4 +27,4 @@ This repository and APK are for informational and experimental purposes only. Go
 
 Explore the possibilities of AI-powered communication and productivity today. Download Bard and unlock a new dimension of mobile interaction.
 
-Please give me stars if you like my work!!🐱
+Please give me stars 💫 if you like my work!!🐱
