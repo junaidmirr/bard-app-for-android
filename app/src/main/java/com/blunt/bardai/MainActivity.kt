@@ -1,60 +1,55 @@
 package com.blunt.bardai
-
-import androidx.activity.ComponentActivity
-import android.content.Intent
-import android.os.Build
-import android.os.Bundle
-import android.view.View
-import android.view.WindowInsets
 import android.view.animation.Animation
 import android.view.animation.AnimationUtils
+import android.os.Bundle
+import android.view.View
+import android.webkit.WebView
+import android.webkit.WebViewClient
 import android.widget.ImageView
+import androidx.appcompat.app.AppCompatActivity
+import com.blunt.bardai.R
 
+class MainActivity : AppCompatActivity() {
 
-class MainActivity : ComponentActivity() {
+    private lateinit var webView: WebView
+    private lateinit var splashImage: ImageView
+    private lateinit var fadeIn: Animation
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        // Set the content view first
         setContentView(R.layout.main_activity)
 
-        // Then hide the system UI
-        hideSystemUI()
+        webView = findViewById(R.id.webview)
+        splashImage = findViewById(R.id.splashImage)
+        fadeIn = AnimationUtils.loadAnimation(this, R.anim.fade_in)
 
-        val splashImage: ImageView = findViewById(R.id.splashImage)
+        // Set repeat count and mode of animation
+        fadeIn.repeatCount = Animation.INFINITE
+        fadeIn.repeatMode = Animation.REVERSE
 
-        // Load animation
-        val fadeIn: Animation = AnimationUtils.loadAnimation(this, R.anim.fade_in)
+        // Load website
+        webView.settings.javaScriptEnabled = true
+        webView.loadUrl("https://bard.google.com/chat")
 
-        // Set animation listener to start the next activity after animation ends
-        fadeIn.setAnimationListener(object : Animation.AnimationListener {
-            override fun onAnimationStart(animation: Animation) {}
+        // Hide WebView until page loaded
+        webView.visibility = View.INVISIBLE
 
-            override fun onAnimationEnd(animation: Animation) {
-                // Start your main activity after the splash screen animation ends
-                val intent = Intent(this@MainActivity, MainActivity2::class.java)
-                startActivity(intent)
-                finish()
-            }
-
-            override fun onAnimationRepeat(animation: Animation) {}
-        })
-
-        // Start animation
+        // Show splash screen
+        splashImage.visibility = View.VISIBLE
         splashImage.startAnimation(fadeIn)
-    }
 
-    // Hide the system UI (status bar and navigation bar) for a fullscreen experience
-    private fun hideSystemUI() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-            window.setDecorFitsSystemWindows(false)
-            window.insetsController?.hide(WindowInsets.Type.statusBars() or WindowInsets.Type.navigationBars())
-            // No need to check for Build.VERSION.SDK_INT >= Build.VERSION_CODES.S as it is already included in Build.VERSION_CODES.R
-        } else {
-            @Suppress("DEPRECATION")
-            window.decorView.systemUiVisibility = (View.SYSTEM_UI_FLAG_FULLSCREEN
-                    or View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
-                    or View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY)
+        // Check if page finished loading
+        webView.webViewClient = object : WebViewClient() {
+            override fun onPageFinished(view: WebView, url: String) {
+                // Get the current progress of the web page loading
+                val progress = webView.progress
+                // If the web page is fully loaded
+                if (progress == 100) {
+                    // Show WebView and hide splash screen
+                    webView.visibility = View.VISIBLE
+                    splashImage.visibility = View.GONE
+                }
+            }
         }
     }
 }
